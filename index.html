@@ -402,6 +402,7 @@
       activeBallReady: true,
       netAnim: 0,
       netSide: 0,
+      scoredDropFrames: 0,
     };
 
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
@@ -758,18 +759,29 @@
         ) {
           ball.scored = true;
           ball.x = clamp(ball.x, rimLeft + 14, rimRight - 14);
-          ball.vx *= 0.35;
-          ball.vy = Math.max(ball.vy, 2.8);
+          ball.vx = 0;
+          ball.vy = Math.max(ball.vy, 3.8);
+          ball.removeSoon = true;
+          state.scoredDropFrames = 16;
           triggerNetSwish(ball);
           registerScore(pointValue(state.timeLeft));
         }
-
         if (ball.scored) {
           ball.x = clamp(ball.x, rimLeft + 12, rimRight - 12);
-          ball.vx *= 0.18;
-          if (ball.vy < 3.4) ball.vy = 3.4;
+          ball.vx = 0;
+          if (ball.vy < 3.8) ball.vy = 3.8;
+        
+          if (ball.removeSoon) {
+            state.scoredDropFrames -= 1;
+            if (state.scoredDropFrames <= 0 || ball.y > rimY + 92) {
+              ball.dead = true;
+              state.activeBallReady = true;
+              state.message = 'Pull and release to shoot again.';
+              updateUI();
+              continue;
+            }
+          }
         }
-
         if (ball.y + BALL_R >= FLOOR_Y) {
           ball.y = FLOOR_Y - BALL_R;
 
