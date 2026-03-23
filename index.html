@@ -649,11 +649,46 @@
 
       const rimLeft = state.hoopX - RIM_W / 2;
       const rimRight = state.hoopX + RIM_W / 2;
-      const rimY = HOOP_Y;
+      const rimY = HOOP_Y + 26;
+      const rimRadius = 5.5;
       const backboardX = rimRight + 10;
+      const backboardLeft = state.hoopX - 95;
+      const backboardRight = state.hoopX + 95;
+      const backboardTop = HOOP_Y - 64;
+      const backboardBottom = HOOP_Y + 28;
+
+      function collideWithRim(ball, cx, cy) {
+        const dx = ball.x - cx;
+        const dy = ball.y - cy;
+        const minDist = BALL_R + rimRadius;
+        const d2 = dx * dx + dy * dy;
+        if (d2 >= minDist * minDist) return;
+
+        const dist = Math.sqrt(d2) || 0.0001;
+        let nx = dx / dist;
+        let ny = dy / dist;
+
+        if (!Number.isFinite(nx) || !Number.isFinite(ny)) {
+          nx = 0;
+          ny = -1;
+        }
+
+        ball.x = cx + nx * minDist;
+        ball.y = cy + ny * minDist;
+
+        const dot = ball.vx * nx + ball.vy * ny;
+        if (dot < 0) {
+          const restitution = 0.84;
+          ball.vx = ball.vx - (1 + restitution) * dot * nx;
+          ball.vy = ball.vy - (1 + restitution) * dot * ny;
+          ball.vx *= 0.99;
+        }
+      }
 
       for (const ball of state.balls) {
         const prevY = ball.y;
+        const prevX = ball.x;
+
         ball.x += ball.vx * delta;
         ball.y += ball.vy * delta;
         ball.vy += GRAVITY * delta;
@@ -668,42 +703,47 @@
         }
 
         if (
-          ball.y + BALL_R > rimY - 2 &&
-          ball.y - BALL_R < rimY + RIM_T + 2 &&
-          ball.x + BALL_R > rimLeft &&
-          ball.x - BALL_R < rimLeft + 7 &&
-          ball.vy > -1
-        ) {
-          ball.x = rimLeft - BALL_R;
-          ball.vx = -Math.abs(ball.vx) * 0.84;
-          ball.vy *= 0.92;
-        }
-
-        if (
-          ball.y + BALL_R > rimY - 2 &&
-          ball.y - BALL_R < rimY + RIM_T + 2 &&
-          ball.x - BALL_R < rimRight &&
-          ball.x + BALL_R > rimRight - 7 &&
-          ball.vy > -1
-        ) {
-          ball.x = rimRight + BALL_R;
-          ball.vx = Math.abs(ball.vx) * 0.84;
-          ball.vy *= 0.92;
-        }
-
-        if (
           ball.x + BALL_R > backboardX &&
           ball.x - BALL_R < backboardX + BACKBOARD_W &&
           ball.y + BALL_R > HOOP_Y - BACKBOARD_H / 2 &&
           ball.y - BALL_R < HOOP_Y + BACKBOARD_H / 2
         ) {
           ball.x = backboardX - BALL_R;
-          ball.vx = -Math.abs(ball.vx) * 0.85;
+          ball.vx = -Math.abs(ball.vx) * 0.88;
+          ball.vy *= 0.98;
         }
 
-        if (!ball.scored && prevY < rimY && ball.y >= rimY && ball.x > rimLeft + 10 && ball.x < rimRight - 10 && ball.vy > 0) {
+        if (
+          ball.y - BALL_R < backboardBottom &&
+          ball.y + BALL_R > backboardTop &&
+          ball.x > backboardLeft &&
+          ball.x < backboardRight &&
+          prevY <= backboardTop - BALL_R &&
+          ball.vy > 0
+        ) {
+          ball.y = backboardTop - BALL_R;
+          ball.vy = -Math.abs(ball.vy) * 0.76;
+        }
+
+        collideWithRim(ball, rimLeft, rimY);
+        collideWithRim(ball, rimRight, rimY);
+
+        if (
+          !ball.scored &&
+          prevY < rimY &&
+          ball.y >= rimY + 2 &&
+          ball.x > rimLeft + 8 &&
+          ball.x < rimRight - 8 &&
+          ball.vy > 0
+        ) {
           ball.scored = true;
+          ball.vx *= 0.98;
+          ball.vy *= 0.94;
           registerScore(pointValue(state.timeLeft));
+        }
+
+        if (ball.scored && ball.y > rimY + 18 && ball.x > rimLeft + 2 && ball.x < rimRight - 2) {
+          ball.vx *= 0.985;
         }
 
         if (ball.y + BALL_R >= FLOOR_Y) {
