@@ -333,6 +333,7 @@
     const GAME_W = 980;
     const GAME_H = 620;
     const FLOOR_Y = 540;
+    const TIMER_SPEED = 0.85;
     const GRAVITY = 0.34;
     const BALL_R = 22;
     const HOOP_Y = 140;
@@ -616,7 +617,7 @@
       if (!state.running) return;
       const delta = Math.min(deltaMs / 16.6667, 2.1);
 
-      state.timerCarry += deltaMs;
+      state.timerCarry += deltaMs * TIMER_SPEED;
       if (state.timerCarry >= 1000) {
         const seconds = Math.floor(state.timerCarry / 1000);
         state.timerCarry -= seconds * 1000;
@@ -707,10 +708,10 @@
 
         if (ball.y + BALL_R >= FLOOR_Y) {
           ball.y = FLOOR_Y - BALL_R;
-          ball.vy *= -0.62;
-          ball.vx *= 0.95;
-          if (Math.abs(ball.vy) < 1.4) ball.vy = 0;
-          if (Math.abs(ball.vx) < 0.15 && Math.abs(ball.vy) < 0.2) {
+          ball.vy *= -0.52;
+          ball.vx *= 0.92;
+          if (Math.abs(ball.vy) < 1.0) ball.vy = 0;
+          if (Math.abs(ball.vx) < 0.35 && Math.abs(ball.vy) < 0.18) {
             ball.dead = true;
             state.activeBallReady = true;
             state.message = 'Pull and release to shoot again.';
@@ -781,18 +782,40 @@
       ctx.fillRect(hoopX - RIM_W / 2, HOOP_Y + 26, RIM_W, RIM_T);
       ctx.strokeStyle = 'rgba(255,255,255,0.95)';
       ctx.lineWidth = 3;
-      for (let i = 0; i <= 6; i++) {
-        const topX = hoopX - RIM_W / 2 + 8 + i * 12.5;
+      ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+      ctx.lineWidth = 2.5;
+      const netTopY = HOOP_Y + 32;
+      const netBottomY = HOOP_Y + 88;
+      const netHalfTop = 34;
+      const netHalfBottom = 22;
+
+      for (let i = 0; i < 7; i++) {
+        const t = i / 6;
+        const xTop = hoopX - netHalfTop + t * netHalfTop * 2;
+        const xBottom = hoopX - netHalfBottom + t * netHalfBottom * 2;
         ctx.beginPath();
-        ctx.moveTo(topX, HOOP_Y + 32);
-        ctx.lineTo(topX + (i % 2 === 0 ? -8 : 8), HOOP_Y + 92);
+        ctx.moveTo(xTop, netTopY);
+        ctx.lineTo(xBottom, netBottomY);
         ctx.stroke();
       }
-      for (let i = 0; i < 5; i++) {
-        const y = HOOP_Y + 44 + i * 12;
+
+      for (let i = 0; i < 7; i++) {
+        const t = i / 6;
+        const xTop = hoopX + netHalfTop - t * netHalfTop * 2;
+        const xBottom = hoopX + netHalfBottom - t * netHalfBottom * 2;
         ctx.beginPath();
-        ctx.moveTo(hoopX - 32 + i * 2, y);
-        ctx.lineTo(hoopX + 32 - i * 2, y);
+        ctx.moveTo(xTop, netTopY);
+        ctx.lineTo(xBottom, netBottomY);
+        ctx.stroke();
+      }
+
+      for (let i = 1; i <= 4; i++) {
+        const t = i / 5;
+        const y = netTopY + t * (netBottomY - netTopY);
+        const half = netHalfTop + (netHalfBottom - netHalfTop) * t;
+        ctx.beginPath();
+        ctx.moveTo(hoopX - half, y);
+        ctx.lineTo(hoopX + half, y);
         ctx.stroke();
       }
     }
