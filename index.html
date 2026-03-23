@@ -727,14 +727,17 @@
           ball.x > backboardLeft &&
           ball.x < backboardRight &&
           prevY <= backboardTop - BALL_R &&
-          ball.vy > 0
+          ball.vy > 0 &&
+          (ball.x < rimLeft - 6 || ball.x > rimRight + 6)
         ) {
           ball.y = backboardTop - BALL_R;
           ball.vy = -Math.abs(ball.vy) * 0.76;
         }
 
-        collideWithRim(ball, rimLeft, rimY);
-        collideWithRim(ball, rimRight, rimY);
+        if (!(ball.scored && ball.y > rimY - 4 && ball.x > rimLeft + 6 && ball.x < rimRight - 6)) {
+          collideWithRim(ball, rimLeft, rimY);
+          collideWithRim(ball, rimRight, rimY);
+        }
 
         if (
           !ball.scored &&
@@ -751,8 +754,9 @@
           registerScore(pointValue(state.timeLeft));
         }
 
-        if (ball.scored && ball.y > rimY + 18 && ball.x > rimLeft + 2 && ball.x < rimRight - 2) {
-          ball.vx *= 0.985;
+        if (ball.scored && ball.y > rimY - 2 && ball.x > rimLeft + 2 && ball.x < rimRight - 2) {
+          ball.vx *= 0.96;
+          if (ball.vy < 2.2) ball.vy = Math.max(ball.vy, 2.2);
         }
 
         if (ball.y + BALL_R >= FLOOR_Y) {
