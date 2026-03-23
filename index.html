@@ -715,6 +715,7 @@
         }
 
         if (
+          !ball.scored &&
           ball.x + BALL_R > backboardX &&
           ball.x - BALL_R < backboardX + BACKBOARD_W &&
           ball.y + BALL_R > HOOP_Y - BACKBOARD_H / 2 &&
@@ -726,6 +727,7 @@
         }
 
         if (
+          !ball.scored &&
           ball.y - BALL_R < backboardBottom &&
           ball.y + BALL_R > backboardTop &&
           ball.x > backboardLeft &&
