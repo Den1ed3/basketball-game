@@ -402,7 +402,6 @@
       activeBallReady: true,
       netAnim: 0,
       netSide: 0,
-      scoredDropFrames: 0,
     };
 
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
@@ -535,10 +534,13 @@
         id: state.nextBallId++,
         x: BALL_SPAWN.x,
         y: BALL_SPAWN.y,
-        vx, vy,
+        vx,
+        vy,
         scored: false,
         dead: false,
         removeSoon: false,
+        scoredDropFrames: 0,
+        floorFrames: 0,
         trail: []
       };
     }
@@ -762,7 +764,7 @@
           ball.vx = 0;
           ball.vy = Math.max(ball.vy, 3.8);
           ball.removeSoon = true;
-          state.scoredDropFrames = 16;
+          ball.scoredDropFrames = 16;
           triggerNetSwish(ball);
           registerScore(pointValue(state.timeLeft));
         }
@@ -772,8 +774,8 @@
           if (ball.vy < 3.8) ball.vy = 3.8;
         
           if (ball.removeSoon) {
-            state.scoredDropFrames -= 1;
-            if (state.scoredDropFrames <= 0 || ball.y > rimY + 92) {
+            ball.scoredDropFrames -= 1;
+            if (ball.scoredDropFrames <= 0 || ball.y > rimY + 92) {
               ball.dead = true;
               state.activeBallReady = true;
               state.message = 'Pull and release to shoot again.';
@@ -784,7 +786,7 @@
         }
         if (ball.y + BALL_R >= FLOOR_Y) {
           ball.y = FLOOR_Y - BALL_R;
-
+        
           if (ball.scored) {
             ball.dead = true;
             state.activeBallReady = true;
@@ -792,9 +794,18 @@
             updateUI();
           } else {
             ball.vy *= -0.52;
-            ball.vx *= 0.92;
+            ball.vx *= 0.90;
+        
             if (Math.abs(ball.vy) < 1.0) ball.vy = 0;
-            if (Math.abs(ball.vx) < 0.35 && Math.abs(ball.vy) < 0.18) {
+            if (Math.abs(ball.vx) < 0.25) ball.vx = 0;
+        
+            if (Math.abs(ball.vx) < 0.25 && Math.abs(ball.vy) < 0.1) {
+              ball.floorFrames += 1;
+            } else {
+              ball.floorFrames = 0;
+            }
+        
+            if (ball.floorFrames > 3) {
               ball.dead = true;
               state.activeBallReady = true;
               state.message = 'Pull and release to shoot again.';
