@@ -537,6 +537,7 @@
         vx, vy,
         scored: false,
         dead: false,
+        removeSoon: false,
         trail: []
       };
     }
@@ -771,14 +772,22 @@
 
         if (ball.y + BALL_R >= FLOOR_Y) {
           ball.y = FLOOR_Y - BALL_R;
-          ball.vy *= -0.52;
-          ball.vx *= 0.92;
-          if (Math.abs(ball.vy) < 1.0) ball.vy = 0;
-          if (Math.abs(ball.vx) < 0.35 && Math.abs(ball.vy) < 0.18) {
+
+          if (ball.scored) {
             ball.dead = true;
             state.activeBallReady = true;
             state.message = 'Pull and release to shoot again.';
             updateUI();
+          } else {
+            ball.vy *= -0.52;
+            ball.vx *= 0.92;
+            if (Math.abs(ball.vy) < 1.0) ball.vy = 0;
+            if (Math.abs(ball.vx) < 0.35 && Math.abs(ball.vy) < 0.18) {
+              ball.dead = true;
+              state.activeBallReady = true;
+              state.message = 'Pull and release to shoot again.';
+              updateUI();
+            }
           }
         }
 
