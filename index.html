@@ -693,6 +693,10 @@
         }
       }
 
+      function inCylinder(ball) {
+        return ball.x > rimLeft + 8 && ball.x < rimRight - 8 && ball.y > rimY - 10;
+      }
+
       for (const ball of state.balls) {
         const prevY = ball.y;
         const prevX = ball.x;
@@ -735,8 +739,10 @@
         }
 
         if (!(ball.scored && ball.y > rimY - 4 && ball.x > rimLeft + 6 && ball.x < rimRight - 6)) {
+          if (!ball.scored && !inCylinder(ball)) {
           collideWithRim(ball, rimLeft, rimY);
           collideWithRim(ball, rimRight, rimY);
+        }
         }
 
         if (
@@ -748,15 +754,17 @@
           ball.vy > 0
         ) {
           ball.scored = true;
-          ball.vx *= 0.98;
-          ball.vy *= 0.94;
+          ball.x = clamp(ball.x, rimLeft + 14, rimRight - 14);
+          ball.vx *= 0.35;
+          ball.vy = Math.max(ball.vy, 2.8);
           triggerNetSwish(ball);
           registerScore(pointValue(state.timeLeft));
         }
 
-        if (ball.scored && ball.y > rimY - 2 && ball.x > rimLeft + 2 && ball.x < rimRight - 2) {
-          ball.vx *= 0.96;
-          if (ball.vy < 2.2) ball.vy = Math.max(ball.vy, 2.2);
+        if (ball.scored) {
+          ball.x = clamp(ball.x, rimLeft + 12, rimRight - 12);
+          ball.vx *= 0.18;
+          if (ball.vy < 3.4) ball.vy = 3.4;
         }
 
         if (ball.y + BALL_R >= FLOOR_Y) {
