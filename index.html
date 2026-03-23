@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arcade Basketball</title>
+  <style>
+    :root {
+      --bg1: #08111f;
+      --bg2: #142033;
+      --panel: rgba(255,255,255,0.08);
+      --panel-border: rgba(255,255,255,0.12);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.72);
+      --orange: #f59e0b;
+      --orange2: #fb923c;
+      --green: #34d399;
+      --red: #ef4444;
+      --yellow: #facc15;
+      --shadow: 0 18px 60px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at top, #1c2e4b 0%, var(--bg1) 55%, #050910 100%);
+      color: var(--text);
+    }
+
+    body {
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .shell {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--panel-border);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 22px;
+      border-bottom: 1px solid var(--panel-border);
+      background: linear-gradient(90deg, rgba(245,158,11,0.16), rgba(255,255,255,0.03), rgba(52,211,153,0.10));
+    }
+
+    .title-wrap h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1;
+    }
+
+    .title-wrap p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .controls-top {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 16px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+    }
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .btn-primary {
+      background: linear-gradient(180deg, #fbbf24, var(--orange));
+      color: #111;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .content {
+      padding: 18px;
+    }
+
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .panel {
+      background: rgba(12,18,31,0.92);
+      border: 1px solid var(--panel-border);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel h2 {
+      margin: 0 0 6px;
+      font-size: 28px;
+    }
+
+    .panel p {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .bullet-box {
+      background: rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 14px 16px;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    .game-ui {
+      display: none;
+      gap: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .stat {
+      background: rgba(12,18,31,0.92);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 14px 16px;
+    }
+
+    .stat .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+    }
+
+    .stat .value {
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .time-hot { color: var(--red); }
+    .time-warm { color: var(--orange2); }
+    .time-cool { color: var(--green); }
+
+    .skill-progress-wrap {
+      display: none;
+      background: rgba(12,18,31,0.92);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .progress-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .bar {
+      height: 12px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #34d399, #fbbf24);
+      border-radius: 999px;
+      transition: width 0.2s ease;
+    }
+
+    .court-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 980 / 620;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid var(--panel-border);
+      background: linear-gradient(180deg, #d9f0ff 0%, #f7fbff 55%, #f8d188 56%, #b8752c 100%);
+      touch-action: none;
+      user-select: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .msg, .points-badge {
+      position: absolute;
+      top: 14px;
+      padding: 10px 14px;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 14px;
+      max-width: 44%;
+    }
+
+    .msg { left: 14px; }
+    .points-badge { right: 14px; }
+
+    .result {
+      display: none;
+      margin-top: 18px;
+      justify-content: center;
+    }
+
+    .result-card {
+      max-width: 720px;
+      width: 100%;
+      text-align: center;
+      background: rgba(12,18,31,0.94);
+      border: 1px solid var(--panel-border);
+      border-radius: 26px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .result-card h2 {
+      margin: 0 0 8px;
+      font-size: 34px;
+    }
+
+    .result-card p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .result-stat {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .result-stat .small {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 8px;
+    }
+
+    .result-stat .big {
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .result-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .menu, .stats, .result-stats { grid-template-columns: 1fr; }
+      .header { flex-direction: column; align-items: flex-start; }
+      .msg, .points-badge {
+        position: static;
+        max-width: unset;
+        margin: 10px 10px 0;
+      }
+      .overlay-row {
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="shell">
+      <div class="header">
+        <div class="title-wrap">
+          <h1>Arcade Basketball</h1>
+          <p>Drag or flick the ball upward with mouse or touchscreen and beat the buzzer.</p>
+        </div>
+        <div class="controls-top">
+          <button id="menuBtn" class="btn-secondary" style="display:none;">Menu</button>
+          <button id="restartBtn" class="btn-primary" style="display:none;">Restart</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div id="menuScreen" class="menu">
+          <div class="panel">
+            <h2>Classic</h2>
+            <p>Score as many points as possible in 60 seconds.</p>
+            <div class="bullet-box">
+              • 60-second countdown<br>
+              • Shots from 60s to 26s = 2 points<br>
+              • Shots from 25s to 0s = 3 points
+            </div>
+            <button id="classicBtn" class="btn-primary" style="width:100%;">Start Classic</button>
+          </div>
+
+          <div class="panel">
+            <h2>Skill Level</h2>
+            <p>5 rounds. Clear the target score before time runs out.</p>
+            <div class="bullet-box">
+              • Round 1: 30 pts<br>
+              • Round 2: 75 pts<br>
+              • Round 3: 120 pts<br>
+              • Round 4: 160 pts<br>
+              • Round 5: 160+ pts, then game ends<br>
+              • The hoop moves faster each round
+            </div>
+            <button id="skillBtn" class="btn-primary" style="width:100%;background:linear-gradient(180deg,#6ee7b7,#34d399);">Start Skill Level</button>
+          </div>
+        </div>
+
+        <div id="gameUI" class="game-ui">
+          <div class="stats">
+            <div class="stat"><div class="label">Score</div><div id="scoreEl" class="value">0</div></div>
+            <div class="stat"><div class="label">Time</div><div id="timeEl" class="value time-cool">60s</div></div>
+            <div class="stat"><div class="label">Mode</div><div id="modeEl" class="value">Classic</div></div>
+            <div class="stat"><div class="label">Round / Value</div><div id="roundEl" class="value">2 pts</div></div>
+          </div>
+
+          <div id="skillProgress" class="skill-progress-wrap">
+            <div class="progress-head">
+              <span id="targetLabel">Target: 30 pts</span>
+              <span id="targetScore">0 / 30</span>
+            </div>
+            <div class="bar"><div id="barFill" class="bar-fill"></div></div>
+          </div>
+
+          <div class="court-wrap" id="courtWrap">
+            <canvas id="gameCanvas" width="980" height="620"></canvas>
+            <div class="overlay-row">
+              <div id="messageEl" class="msg">Drag up and release to shoot.</div>
+              <div id="pointsBadge" class="points-badge">Shots worth 2 points</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="resultScreen" class="result">
+          <div class="result-card">
+            <h2 id="resultTitle">Time's Up</h2>
+            <p id="resultText">Classic mode finished with 0 points.</p>
+            <div class="result-stats">
+              <div class="result-stat"><div class="small">Final Score</div><div id="finalScore" class="big">0</div></div>
+              <div class="result-stat"><div class="small">Mode</div><div id="finalMode" class="big">Classic</div></div>
+              <div class="result-stat"><div class="small">Round</div><div id="finalRound" class="big">1</div></div>
+            </div>
+            <div class="result-actions">
+              <button id="playAgainBtn" class="btn-primary">Play Again</button>
+              <button id="backMenuBtn" class="btn-secondary">Back to Menu</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const GAME_W = 980;
+    const GAME_H = 620;
+    const FLOOR_Y = 560;
+    const GRAVITY = 0.42;
+    const BALL_R = 18;
+    const HOOP_Y = 180;
+    const RIM_W = 88;
+    const RIM_T = 6;
+    const BACKBOARD_W = 14;
+    const BACKBOARD_H = 110;
+    const ROUND_TIME = 60;
+    const SKILL_THRESHOLDS = [30, 75, 120, 160, 160];
+    const SKILL_SPEEDS = [0, 1.3, 2.1, 2.9, 4.0];
+    const MAX_ACTIVE_BALLS = 5;
+    const BALL_SPAWN = { x: 180, y: 468 };
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const wrap = document.getElementById('courtWrap');
+
+    const menuScreen = document.getElementById('menuScreen');
+    const gameUI = document.getElementById('gameUI');
+    const resultScreen = document.getElementById('resultScreen');
+    const skillProgress = document.getElementById('skillProgress');
+
+    const classicBtn = document.getElementById('classicBtn');
+    const skillBtn = document.getElementById('skillBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const menuBtn = document.getElementById('menuBtn');
+    const playAgainBtn = document.getElementById('playAgainBtn');
+    const backMenuBtn = document.getElementById('backMenuBtn');
+
+    const scoreEl = document.getElementById('scoreEl');
+    const timeEl = document.getElementById('timeEl');
+    const modeEl = document.getElementById('modeEl');
+    const roundEl = document.getElementById('roundEl');
+    const messageEl = document.getElementById('messageEl');
+    const pointsBadge = document.getElementById('pointsBadge');
+    const targetLabel = document.getElementById('targetLabel');
+    const targetScore = document.getElementById('targetScore');
+    const barFill = document.getElementById('barFill');
+
+    const resultTitle = document.getElementById('resultTitle');
+    const resultText = document.getElementById('resultText');
+    const finalScore = document.getElementById('finalScore');
+    const finalMode = document.getElementById('finalMode');
+    const finalRound = document.getElementById('finalRound');
+
+    const state = {
+      screen: 'menu',
+      mode: 'classic',
+      score: 0,
+      timeLeft: 60,
+      round: 1,
+      balls: [],
+      nextBallId: 1,
+      running: false,
+      message: 'Drag up and release to shoot.',
+      hoopX: 760,
+      hoopDir: 1,
+      lastTs: 0,
+      timerCarry: 0,
+      dragStart: null,
+      dragNow: null,
+      result: null,
+      flashUntil: 0,
+      shotLine: null,
+    };
+
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+    function dist(ax, ay, bx, by) { return Math.hypot(ax - bx, ay - by); }
+    function pointValue(t) { return t > 25 ? 2 : 3; }
+    function thresholdForRound(r) { return SKILL_THRESHOLDS[r - 1]; }
+    function speedForRound(r) { return SKILL_SPEEDS[r - 1]; }
+
+    function updateUI() {
+      scoreEl.textContent = state.score;
+      timeEl.textContent = state.timeLeft + 's';
+      modeEl.textContent = state.mode === 'classic' ? 'Classic' : 'Skill';
+      roundEl.textContent = state.mode === 'skill' ? ('Round ' + state.round) : (pointValue(state.timeLeft) + ' pts');
+      messageEl.textContent = state.message;
+      pointsBadge.textContent = 'Shots worth ' + pointValue(state.timeLeft) + ' points';
+
+      timeEl.className = 'value ' + (state.timeLeft <= 10 ? 'time-hot' : state.timeLeft <= 25 ? 'time-warm' : 'time-cool');
+      if (Date.now() < state.flashUntil) timeEl.style.transform = 'scale(1.08)';
+      else timeEl.style.transform = 'scale(1)';
+
+      if (state.mode === 'skill' && state.screen === 'playing') {
+        skillProgress.style.display = 'block';
+        const target = thresholdForRound(state.round);
+        targetLabel.textContent = 'Target: ' + target + ' pts';
+        targetScore.textContent = Math.min(state.score, target) + ' / ' + target;
+        barFill.style.width = Math.min((state.score / target) * 100, 100) + '%';
+      } else {
+        skillProgress.style.display = 'none';
+      }
+
+      menuScreen.style.display = state.screen === 'menu' ? 'grid' : 'none';
+      gameUI.style.display = state.screen === 'playing' ? 'block' : 'none';
+      resultScreen.style.display = state.screen === 'result' ? 'flex' : 'none';
+      restartBtn.style.display = state.screen === 'menu' ? 'none' : 'inline-block';
+      menuBtn.style.display = state.screen === 'menu' ? 'none' : 'inline-block';
+
+      if (state.screen === 'result' && state.result) {
+        resultTitle.textContent = state.result.title;
+        resultText.textContent = state.result.text;
+        finalScore.textContent = state.score;
+        finalMode.textContent = state.mode === 'classic' ? 'Classic' : 'Skill';
+        finalRound.textContent = state.round;
+      }
+    }
+
+    function resetForNewRun(mode) {
+      state.screen = 'playing';
+      state.mode = mode;
+      state.score = 0;
+      state.timeLeft = ROUND_TIME;
+      state.round = 1;
+      state.balls = [];
+      state.running = true;
+      state.message = mode === 'classic'
+        ? 'Classic mode: score as much as you can in 60 seconds.'
+        : 'Skill mode: hit the target score before time runs out.';
+      state.hoopX = 760;
+      state.hoopDir = 1;
+      state.lastTs = 0;
+      state.timerCarry = 0;
+      state.dragStart = null;
+      state.dragNow = null;
+      state.shotLine = null;
+      state.result = null;
+      updateUI();
+    }
+
+    function showMenu() {
+      state.screen = 'menu';
+      state.running = false;
+      state.dragStart = null;
+      state.dragNow = null;
+      state.shotLine = null;
+      state.message = 'Choose a mode to begin.';
+      updateUI();
+      draw();
+    }
+
+    function finishGame(title, text) {
+      state.running = false;
+      state.screen = 'result';
+      state.result = { title, text };
+      updateUI();
+      draw();
+    }
+
+    function passRound() {
+      if (state.round >= 5) {
+        finishGame('Skill Mode Complete', 'You cleared all 5 rounds. Nice shooting.');
+        return;
+      }
+      state.round += 1;
+      state.score = 0;
+      state.timeLeft = ROUND_TIME;
+      state.timerCarry = 0;
+      state.balls = [];
+      state.lastTs = 0;
+      state.message = 'Round ' + state.round + ': target ' + thresholdForRound(state.round) + ' points. Hoop speed increased.';
+      updateUI();
+    }
+
+    function registerScore(points) {
+      state.score += points;
+      state.message = 'Bucket! +' + points;
+      if (state.mode === 'skill') {
+        if (state.score >= thresholdForRound(state.round)) {
+          passRound();
+        }
+      }
+      updateUI();
+    }
+
+    function endForTime() {
+      if (state.mode === 'classic') {
+        finishGame("Time's Up", 'Classic mode finished with ' + state.score + ' points.');
+        return;
+      }
+      const target = thresholdForRound(state.round);
+      if (state.score >= target) {
+        passRound();
+      } else {
+        finishGame('Round ' + state.round + ' Failed', 'You needed ' + target + ' points, and scored ' + state.score + '.');
+      }
+    }
+
+    function createBall(vx, vy) {
+      return {
+        id: state.nextBallId++,
+        x: BALL_SPAWN.x,
+        y: BALL_SPAWN.y,
+        vx, vy,
+        scored: false,
+        dead: false,
+        trail: []
+      };
+    }
+
+    function shootFromDrag(start, end) {
+      if (!state.running) return;
+      if (state.balls.length >= MAX_ACTIVE_BALLS) return;
+
+      const dx = start.x - end.x;
+      const dy = start.y - end.y;
+      const strength = clamp(Math.hypot(dx, dy), 10, 220);
+      const vx = clamp(dx * 0.12, -14, 14);
+      const vy = clamp(-dy * 0.16 - strength * 0.03, -18, -7);
+
+      if (dy < 12) {
+        state.message = 'Swipe upward to shoot.';
+        updateUI();
+        return;
+      }
+
+      state.balls.push(createBall(vx, vy));
+    }
+
+    function getPoint(evt) {
+      const rect = wrap.getBoundingClientRect();
+      const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+      const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+      return {
+        x: ((clientX - rect.left) / rect.width) * GAME_W,
+        y: ((clientY - rect.top) / rect.height) * GAME_H
+      };
+    }
+
+    function handleStart(evt) {
+      if (state.screen !== 'playing') return;
+      const p = getPoint(evt);
+      if (dist(p.x, p.y, BALL_SPAWN.x, BALL_SPAWN.y) > 70) return;
+      state.dragStart = p;
+      state.dragNow = p;
+      state.shotLine = { start: p, end: p };
+    }
+
+    function handleMove(evt) {
+      if (!state.dragStart) return;
+      evt.preventDefault();
+      const p = getPoint(evt);
+      state.dragNow = p;
+      state.shotLine = { start: state.dragStart, end: p };
+    }
+
+    function handleEnd(evt) {
+      if (!state.dragStart) return;
+      const end = state.dragNow || state.dragStart;
+      const start = state.dragStart;
+      state.dragStart = null;
+      state.dragNow = null;
+      state.shotLine = null;
+      shootFromDrag(start, end);
+      updateUI();
+    }
+
+    wrap.addEventListener('mousedown', handleStart);
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleEnd);
+    wrap.addEventListener('touchstart', handleStart, { passive: true });
+    wrap.addEventListener('touchmove', handleMove, { passive: false });
+    wrap.addEventListener('touchend', handleEnd);
+    wrap.addEventListener('touchcancel', handleEnd);
+
+    classicBtn.addEventListener('click', () => resetForNewRun('classic'));
+    skillBtn.addEventListener('click', () => resetForNewRun('skill'));
+    restartBtn.addEventListener('click', () => resetForNewRun(state.mode));
+    menuBtn.addEventListener('click', showMenu);
+    playAgainBtn.addEventListener('click', () => resetForNewRun(state.mode));
+    backMenuBtn.addEventListener('click', showMenu);
+
+    function update(deltaMs) {
+      if (!state.running) return;
+      const delta = Math.min(deltaMs / 16.6667, 2.1);
+
+      state.timerCarry += deltaMs;
+      if (state.timerCarry >= 1000) {
+        const seconds = Math.floor(state.timerCarry / 1000);
+        state.timerCarry -= seconds * 1000;
+        state.timeLeft = Math.max(0, state.timeLeft - seconds);
+        state.flashUntil = Date.now() + 180;
+        if (state.timeLeft <= 0) {
+          state.timeLeft = 0;
+          updateUI();
+          endForTime();
+          return;
+        }
+        updateUI();
+      }
+
+      if (state.mode === 'skill') {
+        const speed = speedForRound(state.round);
+        if (speed > 0) {
+          state.hoopX += speed * state.hoopDir * delta;
+          if (state.hoopX > 820) {
+            state.hoopX = 820;
+            state.hoopDir = -1;
+          }
+          if (state.hoopX < 560) {
+            state.hoopX = 560;
+            state.hoopDir = 1;
+          }
+        }
+      }
+
+      const rimLeft = state.hoopX - RIM_W / 2;
+      const rimRight = state.hoopX + RIM_W / 2;
+      const rimY = HOOP_Y;
+      const backboardX = rimRight + 10;
+
+      for (const ball of state.balls) {
+        const prevY = ball.y;
+
+        ball.x += ball.vx * delta;
+        ball.y += ball.vy * delta;
+        ball.vy += GRAVITY * delta;
+
+        if (ball.x - BALL_R < 0) {
+          ball.x = BALL_R;
+          ball.vx *= -0.82;
+        }
+        if (ball.x + BALL_R > GAME_W) {
+          ball.x = GAME_W - BALL_R;
+          ball.vx *= -0.82;
+        }
+
+        if (
+          ball.y + BALL_R > rimY - 2 &&
+          ball.y - BALL_R < rimY + RIM_T + 2 &&
+          ball.x + BALL_R > rimLeft &&
+          ball.x - BALL_R < rimLeft + 6 &&
+          ball.vy > -1
+        ) {
+          ball.x = rimLeft - BALL_R;
+          ball.vx = -Math.abs(ball.vx) * 0.85;
+          ball.vy *= 0.92;
+        }
+
+        if (
+          ball.y + BALL_R > rimY - 2 &&
+          ball.y - BALL_R < rimY + RIM_T + 2 &&
+          ball.x - BALL_R < rimRight &&
+          ball.x + BALL_R > rimRight - 6 &&
+          ball.vy > -1
+        ) {
+          ball.x = rimRight + BALL_R;
+          ball.vx = Math.abs(ball.vx) * 0.85;
+          ball.vy *= 0.92;
+        }
+
+        if (
+          ball.x + BALL_R > backboardX &&
+          ball.x - BALL_R < backboardX + BACKBOARD_W &&
+          ball.y + BALL_R > HOOP_Y - BACKBOARD_H / 2 &&
+          ball.y - BALL_R < HOOP_Y + BACKBOARD_H / 2
+        ) {
+          ball.x = backboardX - BALL_R;
+          ball.vx = -Math.abs(ball.vx) * 0.85;
+        }
+
+        if (!ball.scored && prevY < rimY && ball.y >= rimY && ball.x > rimLeft + 10 && ball.x < rimRight - 10 && ball.vy > 0) {
+          ball.scored = true;
+          registerScore(pointValue(state.timeLeft));
+        }
+
+        if (ball.y + BALL_R >= FLOOR_Y) {
+          ball.y = FLOOR_Y - BALL_R;
+          ball.vy *= -0.72;
+          ball.vx *= 0.985;
+          if (Math.abs(ball.vy) < 1.6) ball.vy = 0;
+          if (Math.abs(ball.vx) < 0.08 && Math.abs(ball.vy) < 0.2) ball.dead = true;
+        }
+
+        ball.trail.push({ x: ball.x, y: ball.y });
+        if (ball.trail.length > 7) ball.trail.shift();
+
+        if (ball.y > GAME_H + 120 || ball.x < -100 || ball.x > GAME_W + 100) ball.dead = true;
+      }
+
+      state.balls = state.balls.filter(ball => !ball.dead);
+    }
+
+    function drawCourt() {
+      ctx.clearRect(0, 0, GAME_W, GAME_H);
+
+      const glow = ctx.createRadialGradient(GAME_W/2, 120, 20, GAME_W/2, 120, 420);
+      glow.addColorStop(0, 'rgba(255,255,255,0.72)');
+      glow.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0,0,GAME_W,GAME_H);
+
+      ctx.fillStyle = 'rgba(255,255,255,0.58)';
+      ctx.fillRect(0, 350, GAME_W, 4);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(170, 500, 100, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(810, 500, 100, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(GAME_W/2, 530, 130, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(GAME_W/2, 620); ctx.lineTo(GAME_W/2, 400); ctx.stroke();
+    }
+
+    function drawHoop() {
+      const hoopX = state.hoopX;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(hoopX + RIM_W / 2 + 10, HOOP_Y - 56, BACKBOARD_W, BACKBOARD_H);
+
+      ctx.fillStyle = '#dc2626';
+      ctx.fillRect(hoopX - RIM_W / 2, HOOP_Y, RIM_W, RIM_T);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(hoopX - RIM_W/2 + 8, HOOP_Y + 6);
+      ctx.lineTo(hoopX - RIM_W/2 + 18, HOOP_Y + 48);
+      ctx.lineTo(hoopX + RIM_W/2 - 18, HOOP_Y + 48);
+      ctx.lineTo(hoopX + RIM_W/2 - 8, HOOP_Y + 6);
+      ctx.stroke();
+
+      for (let i = 0; i < 5; i++) {
+        const x = hoopX - RIM_W / 2 + 12 + i * 16;
+        ctx.beginPath();
+        ctx.moveTo(x, HOOP_Y + 6);
+        ctx.lineTo(x + (i % 2 === 0 ? -4 : 4), HOOP_Y + 48);
+        ctx.stroke();
+      }
+    }
+
+    function drawBall(x, y, alpha = 1, scale = 1) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+
+      const grad = ctx.createRadialGradient(-6, -6, 3, 0, 0, BALL_R);
+      grad.addColorStop(0, '#ffcd70');
+      grad.addColorStop(0.4, '#f7941d');
+      grad.addColorStop(1, '#d96b00');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(0, 0, BALL_R, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(95,35,0,0.7)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, BALL_R, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-BALL_R + 3, 0); ctx.lineTo(BALL_R - 3, 0); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, -BALL_R + 3); ctx.lineTo(0, BALL_R - 3); ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function drawDragLine() {
+      if (!state.shotLine) return;
+      ctx.save();
+      ctx.setLineDash([8, 8]);
+      ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(state.shotLine.start.x, state.shotLine.start.y);
+      ctx.lineTo(state.shotLine.end.x, state.shotLine.end.y);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function draw() {
+      drawCourt();
+      drawHoop();
+
+      for (const ball of state.balls) {
+        ball.trail.forEach((t, index) => {
+          drawBall(t.x, t.y, 0.08 + index * 0.03, 0.55 + index * 0.04);
+        });
+        drawBall(ball.x, ball.y, 1, 1);
+      }
+
+      if (state.screen === 'playing' && state.balls.length < MAX_ACTIVE_BALLS) {
+        drawBall(BALL_SPAWN.x, BALL_SPAWN.y, 1, state.dragStart ? 1.05 : 1);
+      }
+
+      drawDragLine();
+    }
+
+    function loop(ts) {
+      if (!state.lastTs) state.lastTs = ts;
+      const deltaMs = Math.min(ts - state.lastTs, 34);
+      state.lastTs = ts;
+      update(deltaMs);
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    updateUI();
+    draw();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>
