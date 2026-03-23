@@ -400,6 +400,8 @@
       result: null,
       flashUntil: 0,
       activeBallReady: true,
+      netAnim: 0,
+      netSide: 0,
     };
 
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
@@ -497,6 +499,12 @@
       state.message = 'Round ' + state.round + ': target ' + thresholdForRound(state.round) + ' points. Hoop movement increased.';
       state.activeBallReady = true;
       updateUI();
+    }
+
+    function triggerNetSwish(ball) {
+      const centerOffset = clamp((ball.x - state.hoopX) / (RIM_W / 2), -1, 1);
+      state.netAnim = 1;
+      state.netSide = centerOffset;
     }
 
     function registerScore(points) {
@@ -739,6 +747,7 @@
           ball.scored = true;
           ball.vx *= 0.98;
           ball.vy *= 0.94;
+          triggerNetSwish(ball);
           registerScore(pointValue(state.timeLeft));
         }
 
@@ -773,6 +782,8 @@
       if (state.balls.length === 0 && !state.dragStart && state.running) {
         state.activeBallReady = true;
       }
+
+      state.netAnim = Math.max(0, state.netAnim - 0.055 * delta);
     }
 
     function drawCourt() {
@@ -820,42 +831,49 @@
 
       ctx.fillStyle = '#f97316';
       ctx.fillRect(hoopX - RIM_W / 2, HOOP_Y + 26, RIM_W, RIM_T);
-      ctx.strokeStyle = 'rgba(255,255,255,0.95)';
-      ctx.lineWidth = 3;
+
       ctx.strokeStyle = 'rgba(255,255,255,0.95)';
       ctx.lineWidth = 2.5;
       const netTopY = HOOP_Y + 32;
       const netBottomY = HOOP_Y + 88;
-      const netHalfTop = 34;
-      const netHalfBottom = 22;
+      const baseTopHalf = 34;
+      const baseBottomHalf = 22;
+      const swish = state.netAnim;
+      const sway = state.netSide * swish * 16;
+      const stretch = swish * 18;
+      const pinch = swish * 8;
+      const netHalfTop = baseTopHalf;
+      const netHalfBottom = Math.max(10, baseBottomHalf - pinch);
+      const bottomY = netBottomY + stretch;
 
       for (let i = 0; i < 7; i++) {
         const t = i / 6;
         const xTop = hoopX - netHalfTop + t * netHalfTop * 2;
-        const xBottom = hoopX - netHalfBottom + t * netHalfBottom * 2;
+        const xBottom = hoopX - netHalfBottom + t * netHalfBottom * 2 + sway;
         ctx.beginPath();
         ctx.moveTo(xTop, netTopY);
-        ctx.lineTo(xBottom, netBottomY);
+        ctx.lineTo(xBottom, bottomY);
         ctx.stroke();
       }
 
       for (let i = 0; i < 7; i++) {
         const t = i / 6;
         const xTop = hoopX + netHalfTop - t * netHalfTop * 2;
-        const xBottom = hoopX + netHalfBottom - t * netHalfBottom * 2;
+        const xBottom = hoopX + netHalfBottom - t * netHalfBottom * 2 + sway;
         ctx.beginPath();
         ctx.moveTo(xTop, netTopY);
-        ctx.lineTo(xBottom, netBottomY);
+        ctx.lineTo(xBottom, bottomY);
         ctx.stroke();
       }
 
       for (let i = 1; i <= 4; i++) {
         const t = i / 5;
-        const y = netTopY + t * (netBottomY - netTopY);
+        const y = netTopY + t * (bottomY - netTopY);
         const half = netHalfTop + (netHalfBottom - netHalfTop) * t;
+        const rowSway = sway * (0.35 + t * 0.65);
         ctx.beginPath();
-        ctx.moveTo(hoopX - half, y);
-        ctx.lineTo(hoopX + half, y);
+        ctx.moveTo(hoopX - half + rowSway, y);
+        ctx.lineTo(hoopX + half + rowSway, y);
         ctx.stroke();
       }
     }
