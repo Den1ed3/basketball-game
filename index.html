@@ -18,6 +18,8 @@
       --red: #ef4444;
       --yellow: #facc15;
       --shadow: 0 18px 60px rgba(0,0,0,0.35);
+      --sky: #1f97e2;
+      --court: #efdfa7;
     }
 
     * { box-sizing: border-box; }
@@ -29,15 +31,8 @@
       color: var(--text);
     }
 
-    body {
-      padding: 16px;
-    }
-
-    .app {
-      max-width: 1180px;
-      margin: 0 auto;
-    }
-
+    body { padding: 16px; }
+    .app { max-width: 1180px; margin: 0 auto; }
     .shell {
       background: rgba(255,255,255,0.05);
       border: 1px solid var(--panel-border);
@@ -62,18 +57,8 @@
       font-size: clamp(28px, 4vw, 46px);
       line-height: 1;
     }
-
-    .title-wrap p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .controls-top {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .title-wrap p { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
+    .controls-top { display: flex; gap: 10px; flex-wrap: wrap; }
 
     button {
       border: 0;
@@ -85,28 +70,19 @@
     }
     button:hover { transform: translateY(-1px); }
     button:active { transform: translateY(0); }
-
-    .btn-primary {
-      background: linear-gradient(180deg, #fbbf24, var(--orange));
-      color: #111;
-    }
-
+    .btn-primary { background: linear-gradient(180deg, #fbbf24, var(--orange)); color: #111; }
     .btn-secondary {
       background: rgba(255,255,255,0.12);
       color: #fff;
       border: 1px solid rgba(255,255,255,0.12);
     }
 
-    .content {
-      padding: 18px;
-    }
-
+    .content { padding: 18px; }
     .menu {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 18px;
     }
-
     .panel {
       background: rgba(12,18,31,0.92);
       border: 1px solid var(--panel-border);
@@ -114,17 +90,8 @@
       padding: 22px;
       box-shadow: var(--shadow);
     }
-
-    .panel h2 {
-      margin: 0 0 6px;
-      font-size: 28px;
-    }
-
-    .panel p {
-      margin: 0 0 16px;
-      color: var(--muted);
-    }
-
+    .panel h2 { margin: 0 0 6px; font-size: 28px; }
+    .panel p { margin: 0 0 16px; color: var(--muted); }
     .bullet-box {
       background: rgba(255,255,255,0.05);
       border-radius: 18px;
@@ -134,25 +101,19 @@
       margin-bottom: 16px;
     }
 
-    .game-ui {
-      display: none;
-      gap: 14px;
-    }
-
+    .game-ui { display: none; gap: 14px; }
     .stats {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
       margin-bottom: 14px;
     }
-
     .stat {
       background: rgba(12,18,31,0.92);
       border: 1px solid var(--panel-border);
       border-radius: 20px;
       padding: 14px 16px;
     }
-
     .stat .label {
       font-size: 11px;
       text-transform: uppercase;
@@ -160,7 +121,6 @@
       color: rgba(255,255,255,0.5);
       margin-bottom: 8px;
     }
-
     .stat .value {
       font-size: clamp(24px, 3vw, 34px);
       font-weight: 900;
@@ -179,7 +139,6 @@
       padding: 14px 16px;
       margin-bottom: 14px;
     }
-
     .progress-head {
       display: flex;
       justify-content: space-between;
@@ -188,14 +147,12 @@
       font-size: 14px;
       margin-bottom: 10px;
     }
-
     .bar {
       height: 12px;
       background: rgba(255,255,255,0.08);
       border-radius: 999px;
       overflow: hidden;
     }
-
     .bar-fill {
       width: 0%;
       height: 100%;
@@ -211,16 +168,11 @@
       border-radius: 28px;
       overflow: hidden;
       border: 1px solid var(--panel-border);
-      background: linear-gradient(180deg, #d9f0ff 0%, #f7fbff 55%, #f8d188 56%, #b8752c 100%);
+      background: linear-gradient(180deg, #2b9ee3 0%, #2b9ee3 63%, #f3e3ab 63%, #ead892 100%);
       touch-action: none;
       user-select: none;
     }
-
-    canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
+    canvas { width: 100%; height: 100%; display: block; }
 
     .msg, .points-badge {
       position: absolute;
@@ -233,7 +185,6 @@
       font-size: 14px;
       max-width: 44%;
     }
-
     .msg { left: 14px; }
     .points-badge { right: 14px; }
 
@@ -242,7 +193,6 @@
       margin-top: 18px;
       justify-content: center;
     }
-
     .result-card {
       max-width: 720px;
       width: 100%;
@@ -253,49 +203,27 @@
       padding: 28px;
       box-shadow: var(--shadow);
     }
-
-    .result-card h2 {
-      margin: 0 0 8px;
-      font-size: 34px;
-    }
-
-    .result-card p {
-      margin: 0 0 20px;
-      color: var(--muted);
-      font-size: 16px;
-    }
-
+    .result-card h2 { margin: 0 0 8px; font-size: 34px; }
+    .result-card p { margin: 0 0 20px; color: var(--muted); font-size: 16px; }
     .result-stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0,1fr));
       gap: 12px;
       margin-bottom: 20px;
     }
-
     .result-stat {
       padding: 14px;
       border-radius: 18px;
       background: rgba(255,255,255,0.05);
     }
-
     .result-stat .small {
       font-size: 11px;
       text-transform: uppercase;
       color: rgba(255,255,255,0.5);
       margin-bottom: 8px;
     }
-
-    .result-stat .big {
-      font-size: 28px;
-      font-weight: 900;
-    }
-
-    .result-actions {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+    .result-stat .big { font-size: 28px; font-weight: 900; }
+    .result-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
     @media (max-width: 900px) {
       .menu, .stats, .result-stats { grid-template-columns: 1fr; }
@@ -321,7 +249,7 @@
       <div class="header">
         <div class="title-wrap">
           <h1>Arcade Basketball</h1>
-          <p>Drag or flick the ball upward with mouse or touchscreen and beat the buzzer.</p>
+          <p>Pull the ball back and release to shoot. Mouse and touchscreen supported.</p>
         </div>
         <div class="controls-top">
           <button id="menuBtn" class="btn-secondary" style="display:none;">Menu</button>
@@ -376,7 +304,7 @@
           <div class="court-wrap" id="courtWrap">
             <canvas id="gameCanvas" width="980" height="620"></canvas>
             <div class="overlay-row">
-              <div id="messageEl" class="msg">Drag up and release to shoot.</div>
+              <div id="messageEl" class="msg">Pull the ball down/back, then release.</div>
               <div id="pointsBadge" class="points-badge">Shots worth 2 points</div>
             </div>
           </div>
@@ -404,19 +332,21 @@
   <script>
     const GAME_W = 980;
     const GAME_H = 620;
-    const FLOOR_Y = 560;
-    const GRAVITY = 0.42;
-    const BALL_R = 18;
-    const HOOP_Y = 180;
-    const RIM_W = 88;
+    const FLOOR_Y = 540;
+    const GRAVITY = 0.34;
+    const BALL_R = 22;
+    const HOOP_Y = 140;
+    const RIM_W = 92;
     const RIM_T = 6;
     const BACKBOARD_W = 14;
-    const BACKBOARD_H = 110;
+    const BACKBOARD_H = 108;
     const ROUND_TIME = 60;
     const SKILL_THRESHOLDS = [30, 75, 120, 160, 160];
-    const SKILL_SPEEDS = [0, 1.3, 2.1, 2.9, 4.0];
-    const MAX_ACTIVE_BALLS = 5;
-    const BALL_SPAWN = { x: 180, y: 468 };
+    const SKILL_SPEEDS = [0, 1.2, 2.0, 2.8, 3.8];
+    const MAX_ACTIVE_BALLS = 4;
+    const BALL_SPAWN = { x: 490, y: 485 };
+    const AIM_MAX_PULL = 170;
+    const AIM_MIN_PULL = 18;
 
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -459,8 +389,8 @@
       balls: [],
       nextBallId: 1,
       running: false,
-      message: 'Drag up and release to shoot.',
-      hoopX: 760,
+      message: 'Pull the ball down/back, then release.',
+      hoopX: 490,
       hoopDir: 1,
       lastTs: 0,
       timerCarry: 0,
@@ -468,7 +398,7 @@
       dragNow: null,
       result: null,
       flashUntil: 0,
-      shotLine: null,
+      activeBallReady: true,
     };
 
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
@@ -484,10 +414,8 @@
       roundEl.textContent = state.mode === 'skill' ? ('Round ' + state.round) : (pointValue(state.timeLeft) + ' pts');
       messageEl.textContent = state.message;
       pointsBadge.textContent = 'Shots worth ' + pointValue(state.timeLeft) + ' points';
-
       timeEl.className = 'value ' + (state.timeLeft <= 10 ? 'time-hot' : state.timeLeft <= 25 ? 'time-warm' : 'time-cool');
-      if (Date.now() < state.flashUntil) timeEl.style.transform = 'scale(1.08)';
-      else timeEl.style.transform = 'scale(1)';
+      timeEl.style.transform = Date.now() < state.flashUntil ? 'scale(1.08)' : 'scale(1)';
 
       if (state.mode === 'skill' && state.screen === 'playing') {
         skillProgress.style.display = 'block';
@@ -524,15 +452,15 @@
       state.running = true;
       state.message = mode === 'classic'
         ? 'Classic mode: score as much as you can in 60 seconds.'
-        : 'Skill mode: hit the target score before time runs out.';
-      state.hoopX = 760;
+        : 'Skill mode: clear the target score before time runs out.';
+      state.hoopX = 490;
       state.hoopDir = 1;
       state.lastTs = 0;
       state.timerCarry = 0;
       state.dragStart = null;
       state.dragNow = null;
-      state.shotLine = null;
       state.result = null;
+      state.activeBallReady = true;
       updateUI();
     }
 
@@ -541,7 +469,6 @@
       state.running = false;
       state.dragStart = null;
       state.dragNow = null;
-      state.shotLine = null;
       state.message = 'Choose a mode to begin.';
       updateUI();
       draw();
@@ -566,17 +493,16 @@
       state.timerCarry = 0;
       state.balls = [];
       state.lastTs = 0;
-      state.message = 'Round ' + state.round + ': target ' + thresholdForRound(state.round) + ' points. Hoop speed increased.';
+      state.message = 'Round ' + state.round + ': target ' + thresholdForRound(state.round) + ' points. Hoop movement increased.';
+      state.activeBallReady = true;
       updateUI();
     }
 
     function registerScore(points) {
       state.score += points;
       state.message = 'Bucket! +' + points;
-      if (state.mode === 'skill') {
-        if (state.score >= thresholdForRound(state.round)) {
-          passRound();
-        }
+      if (state.mode === 'skill' && state.score >= thresholdForRound(state.round)) {
+        passRound();
       }
       updateUI();
     }
@@ -606,61 +532,69 @@
       };
     }
 
-    function shootFromDrag(start, end) {
-      if (!state.running) return;
-      if (state.balls.length >= MAX_ACTIVE_BALLS) return;
-
-      const dx = start.x - end.x;
-      const dy = start.y - end.y;
-      const strength = clamp(Math.hypot(dx, dy), 10, 220);
-      const vx = clamp(dx * 0.12, -14, 14);
-      const vy = clamp(-dy * 0.16 - strength * 0.03, -18, -7);
-
-      if (dy < 12) {
-        state.message = 'Swipe upward to shoot.';
+    function shootFromPull(start, end) {
+      if (!state.running || !state.activeBallReady) return;
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      const pull = clamp(Math.hypot(dx, dy), 0, AIM_MAX_PULL);
+      if (pull < AIM_MIN_PULL) {
+        state.message = 'Pull the ball down or to the side before releasing.';
         updateUI();
         return;
       }
 
+      const nx = dx / (pull || 1);
+      const ny = dy / (pull || 1);
+      const power = pull / AIM_MAX_PULL;
+
+      const vx = clamp(-(dx * 0.12), -12, 12);
+      const vy = clamp(-(Math.max(dy, 22) * 0.16) - power * 9.5, -19, -7.2);
+
       state.balls.push(createBall(vx, vy));
+      state.activeBallReady = false;
+      state.message = 'Shoot again after the ball lands.';
+      updateUI();
     }
 
     function getPoint(evt) {
       const rect = wrap.getBoundingClientRect();
-      const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
-      const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+      const source = evt.touches ? evt.touches[0] : evt;
       return {
-        x: ((clientX - rect.left) / rect.width) * GAME_W,
-        y: ((clientY - rect.top) / rect.height) * GAME_H
+        x: ((source.clientX - rect.left) / rect.width) * GAME_W,
+        y: ((source.clientY - rect.top) / rect.height) * GAME_H
       };
     }
 
     function handleStart(evt) {
-      if (state.screen !== 'playing') return;
+      if (state.screen !== 'playing' || !state.activeBallReady) return;
       const p = getPoint(evt);
-      if (dist(p.x, p.y, BALL_SPAWN.x, BALL_SPAWN.y) > 70) return;
-      state.dragStart = p;
+      if (dist(p.x, p.y, BALL_SPAWN.x, BALL_SPAWN.y) > 62) return;
+      state.dragStart = { x: BALL_SPAWN.x, y: BALL_SPAWN.y };
       state.dragNow = p;
-      state.shotLine = { start: p, end: p };
     }
 
     function handleMove(evt) {
       if (!state.dragStart) return;
       evt.preventDefault();
       const p = getPoint(evt);
-      state.dragNow = p;
-      state.shotLine = { start: state.dragStart, end: p };
+      const dx = p.x - BALL_SPAWN.x;
+      const dy = p.y - BALL_SPAWN.y;
+      const pull = Math.hypot(dx, dy);
+      if (pull > AIM_MAX_PULL) {
+        const ratio = AIM_MAX_PULL / pull;
+        state.dragNow = { x: BALL_SPAWN.x + dx * ratio, y: BALL_SPAWN.y + dy * ratio };
+      } else {
+        state.dragNow = p;
+      }
     }
 
-    function handleEnd(evt) {
-      if (!state.dragStart) return;
-      const end = state.dragNow || state.dragStart;
+    function handleEnd() {
+      if (!state.dragStart || !state.dragNow) return;
       const start = state.dragStart;
+      const end = state.dragNow;
       state.dragStart = null;
       state.dragNow = null;
-      state.shotLine = null;
-      shootFromDrag(start, end);
-      updateUI();
+      shootFromPull(start, end);
     }
 
     wrap.addEventListener('mousedown', handleStart);
@@ -701,12 +635,12 @@
         const speed = speedForRound(state.round);
         if (speed > 0) {
           state.hoopX += speed * state.hoopDir * delta;
-          if (state.hoopX > 820) {
-            state.hoopX = 820;
+          if (state.hoopX > 690) {
+            state.hoopX = 690;
             state.hoopDir = -1;
           }
-          if (state.hoopX < 560) {
-            state.hoopX = 560;
+          if (state.hoopX < 290) {
+            state.hoopX = 290;
             state.hoopDir = 1;
           }
         }
@@ -719,7 +653,6 @@
 
       for (const ball of state.balls) {
         const prevY = ball.y;
-
         ball.x += ball.vx * delta;
         ball.y += ball.vy * delta;
         ball.vy += GRAVITY * delta;
@@ -737,11 +670,11 @@
           ball.y + BALL_R > rimY - 2 &&
           ball.y - BALL_R < rimY + RIM_T + 2 &&
           ball.x + BALL_R > rimLeft &&
-          ball.x - BALL_R < rimLeft + 6 &&
+          ball.x - BALL_R < rimLeft + 7 &&
           ball.vy > -1
         ) {
           ball.x = rimLeft - BALL_R;
-          ball.vx = -Math.abs(ball.vx) * 0.85;
+          ball.vx = -Math.abs(ball.vx) * 0.84;
           ball.vy *= 0.92;
         }
 
@@ -749,11 +682,11 @@
           ball.y + BALL_R > rimY - 2 &&
           ball.y - BALL_R < rimY + RIM_T + 2 &&
           ball.x - BALL_R < rimRight &&
-          ball.x + BALL_R > rimRight - 6 &&
+          ball.x + BALL_R > rimRight - 7 &&
           ball.vy > -1
         ) {
           ball.x = rimRight + BALL_R;
-          ball.vx = Math.abs(ball.vx) * 0.85;
+          ball.vx = Math.abs(ball.vx) * 0.84;
           ball.vy *= 0.92;
         }
 
@@ -774,67 +707,92 @@
 
         if (ball.y + BALL_R >= FLOOR_Y) {
           ball.y = FLOOR_Y - BALL_R;
-          ball.vy *= -0.72;
-          ball.vx *= 0.985;
-          if (Math.abs(ball.vy) < 1.6) ball.vy = 0;
-          if (Math.abs(ball.vx) < 0.08 && Math.abs(ball.vy) < 0.2) ball.dead = true;
+          ball.vy *= -0.62;
+          ball.vx *= 0.95;
+          if (Math.abs(ball.vy) < 1.4) ball.vy = 0;
+          if (Math.abs(ball.vx) < 0.15 && Math.abs(ball.vy) < 0.2) {
+            ball.dead = true;
+            state.activeBallReady = true;
+            state.message = 'Pull and release to shoot again.';
+            updateUI();
+          }
         }
 
         ball.trail.push({ x: ball.x, y: ball.y });
-        if (ball.trail.length > 7) ball.trail.shift();
-
-        if (ball.y > GAME_H + 120 || ball.x < -100 || ball.x > GAME_W + 100) ball.dead = true;
+        if (ball.trail.length > 8) ball.trail.shift();
+        if (ball.y > GAME_H + 120 || ball.x < -100 || ball.x > GAME_W + 100) {
+          ball.dead = true;
+          state.activeBallReady = true;
+          state.message = 'Pull and release to shoot again.';
+          updateUI();
+        }
       }
 
       state.balls = state.balls.filter(ball => !ball.dead);
+      if (state.balls.length === 0 && !state.dragStart && state.running) {
+        state.activeBallReady = true;
+      }
     }
 
     function drawCourt() {
       ctx.clearRect(0, 0, GAME_W, GAME_H);
 
-      const glow = ctx.createRadialGradient(GAME_W/2, 120, 20, GAME_W/2, 120, 420);
-      glow.addColorStop(0, 'rgba(255,255,255,0.72)');
-      glow.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.fillStyle = glow;
-      ctx.fillRect(0,0,GAME_W,GAME_H);
+      ctx.fillStyle = '#2b9ee3';
+      ctx.fillRect(0, 0, GAME_W, GAME_H * 0.63);
+      ctx.fillStyle = '#efdfa7';
+      ctx.fillRect(0, GAME_H * 0.63, GAME_W, GAME_H * 0.37);
+      ctx.strokeStyle = 'rgba(255,255,255,0.82)';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(0, GAME_H * 0.63); ctx.lineTo(GAME_W, GAME_H * 0.63); ctx.stroke();
 
-      ctx.fillStyle = 'rgba(255,255,255,0.58)';
-      ctx.fillRect(0, 350, GAME_W, 4);
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.arc(GAME_W / 2, FLOOR_Y + 10, 115, Math.PI, 0, false);
+      ctx.stroke();
 
-      ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-      ctx.lineWidth = 2;
+      ctx.setLineDash([18, 16]);
+      ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.arc(170, 500, 100, 0, Math.PI * 2); ctx.stroke();
+      ctx.arc(GAME_W / 2, FLOOR_Y + 10, 70, Math.PI, 0, false);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = 'rgba(0,0,0,0.10)';
       ctx.beginPath();
-      ctx.arc(810, 500, 100, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(GAME_W/2, 530, 130, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(GAME_W/2, 620); ctx.lineTo(GAME_W/2, 400); ctx.stroke();
+      ctx.ellipse(BALL_SPAWN.x, FLOOR_Y + 10, 50, 14, 0, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     function drawHoop() {
       const hoopX = state.hoopX;
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(hoopX + RIM_W / 2 + 10, HOOP_Y - 56, BACKBOARD_W, BACKBOARD_H);
-
-      ctx.fillStyle = '#dc2626';
-      ctx.fillRect(hoopX - RIM_W / 2, HOOP_Y, RIM_W, RIM_T);
-
-      ctx.strokeStyle = 'rgba(255,255,255,0.75)';
-      ctx.lineWidth = 2;
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(hoopX - 110, HOOP_Y - 80, 220, 120);
+      ctx.fillStyle = '#7c3aed';
+      ctx.fillRect(hoopX - 95, HOOP_Y - 64, 190, 92);
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+      ctx.lineWidth = 6;
       ctx.beginPath();
-      ctx.moveTo(hoopX - RIM_W/2 + 8, HOOP_Y + 6);
-      ctx.lineTo(hoopX - RIM_W/2 + 18, HOOP_Y + 48);
-      ctx.lineTo(hoopX + RIM_W/2 - 18, HOOP_Y + 48);
-      ctx.lineTo(hoopX + RIM_W/2 - 8, HOOP_Y + 6);
+      ctx.moveTo(hoopX - 88, HOOP_Y - 55); ctx.lineTo(hoopX - 30, HOOP_Y - 55);
+      ctx.moveTo(hoopX + 15, HOOP_Y - 18); ctx.lineTo(hoopX + 78, HOOP_Y - 18);
       ctx.stroke();
 
-      for (let i = 0; i < 5; i++) {
-        const x = hoopX - RIM_W / 2 + 12 + i * 16;
+      ctx.fillStyle = '#f97316';
+      ctx.fillRect(hoopX - RIM_W / 2, HOOP_Y + 26, RIM_W, RIM_T);
+      ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+      ctx.lineWidth = 3;
+      for (let i = 0; i <= 6; i++) {
+        const topX = hoopX - RIM_W / 2 + 8 + i * 12.5;
         ctx.beginPath();
-        ctx.moveTo(x, HOOP_Y + 6);
-        ctx.lineTo(x + (i % 2 === 0 ? -4 : 4), HOOP_Y + 48);
+        ctx.moveTo(topX, HOOP_Y + 32);
+        ctx.lineTo(topX + (i % 2 === 0 ? -8 : 8), HOOP_Y + 92);
+        ctx.stroke();
+      }
+      for (let i = 0; i < 5; i++) {
+        const y = HOOP_Y + 44 + i * 12;
+        ctx.beginPath();
+        ctx.moveTo(hoopX - 32 + i * 2, y);
+        ctx.lineTo(hoopX + 32 - i * 2, y);
         ctx.stroke();
       }
     }
@@ -844,41 +802,70 @@
       ctx.globalAlpha = alpha;
       ctx.translate(x, y);
       ctx.scale(scale, scale);
-
-      const grad = ctx.createRadialGradient(-6, -6, 3, 0, 0, BALL_R);
-      grad.addColorStop(0, '#ffcd70');
-      grad.addColorStop(0.4, '#f7941d');
-      grad.addColorStop(1, '#d96b00');
+      const grad = ctx.createRadialGradient(-7, -8, 4, 0, 0, BALL_R);
+      grad.addColorStop(0, '#ffcc67');
+      grad.addColorStop(0.42, '#f59e0b');
+      grad.addColorStop(1, '#ea580c');
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.arc(0, 0, BALL_R, 0, Math.PI * 2);
       ctx.fill();
-
-      ctx.strokeStyle = 'rgba(95,35,0,0.7)';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'rgba(120,45,0,0.75)';
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.arc(0, 0, BALL_R, 0, Math.PI * 2);
       ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(-BALL_R + 3, 0); ctx.lineTo(BALL_R - 3, 0); ctx.stroke();
+      ctx.moveTo(-BALL_R + 4, 0); ctx.lineTo(BALL_R - 4, 0); ctx.stroke();
       ctx.beginPath();
-      ctx.moveTo(0, -BALL_R + 3); ctx.lineTo(0, BALL_R - 3); ctx.stroke();
-
+      ctx.moveTo(0, -BALL_R + 4); ctx.lineTo(0, BALL_R - 4); ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(-2, 0, BALL_R * 0.72, -1.1, 1.1); ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(2, 0, BALL_R * 0.72, Math.PI - 1.1, Math.PI + 1.1); ctx.stroke();
       ctx.restore();
     }
 
-    function drawDragLine() {
-      if (!state.shotLine) return;
+    function drawAimGuide() {
+      if (!state.dragStart || !state.dragNow) return;
+      const dx = state.dragNow.x - state.dragStart.x;
+      const dy = state.dragNow.y - state.dragStart.y;
+      const pull = Math.hypot(dx, dy);
+      const clamped = Math.min(pull, AIM_MAX_PULL);
+      const ratio = clamped / (pull || 1);
+      const endX = state.dragStart.x + dx * ratio;
+      const endY = state.dragStart.y + dy * ratio;
+      const shotVx = -(endX - state.dragStart.x) * 0.12;
+      const shotVy = -(Math.max(endY - state.dragStart.y, 22) * 0.16) - (clamped / AIM_MAX_PULL) * 9.5;
+
       ctx.save();
-      ctx.setLineDash([8, 8]);
-      ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.9)';
       ctx.lineWidth = 4;
-      ctx.lineCap = 'round';
+      ctx.setLineDash([10, 10]);
       ctx.beginPath();
-      ctx.moveTo(state.shotLine.start.x, state.shotLine.start.y);
-      ctx.lineTo(state.shotLine.end.x, state.shotLine.end.y);
+      ctx.moveTo(state.dragStart.x, state.dragStart.y);
+      ctx.lineTo(endX, endY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      let px = state.dragStart.x;
+      let py = state.dragStart.y;
+      let vx = shotVx;
+      let vy = shotVy;
+      for (let i = 0; i < 22; i++) {
+        px += vx * 0.9;
+        py += vy * 0.9;
+        vy += GRAVITY * 0.9;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
       ctx.stroke();
       ctx.restore();
+
+      drawBall(endX, endY, 1, 1.02);
     }
 
     function draw() {
@@ -886,17 +873,12 @@
       drawHoop();
 
       for (const ball of state.balls) {
-        ball.trail.forEach((t, index) => {
-          drawBall(t.x, t.y, 0.08 + index * 0.03, 0.55 + index * 0.04);
-        });
+        ball.trail.forEach((t, index) => drawBall(t.x, t.y, 0.08 + index * 0.035, 0.52 + index * 0.04));
         drawBall(ball.x, ball.y, 1, 1);
       }
 
-      if (state.screen === 'playing' && state.balls.length < MAX_ACTIVE_BALLS) {
-        drawBall(BALL_SPAWN.x, BALL_SPAWN.y, 1, state.dragStart ? 1.05 : 1);
-      }
-
-      drawDragLine();
+      if (state.activeBallReady && !state.dragStart) drawBall(BALL_SPAWN.x, BALL_SPAWN.y, 1, 1);
+      drawAimGuide();
     }
 
     function loop(ts) {
